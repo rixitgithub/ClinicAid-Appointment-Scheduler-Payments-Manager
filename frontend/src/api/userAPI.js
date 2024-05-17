@@ -21,9 +21,22 @@ const useUserAPI = () => {
       });
   };
 
-  // Add more API methods as needed
+  const login = (userData) => {
+    console.log({ userData }); // Log to indicate data being sent
+    return axios
+      .post(`${API_URL}/api/users/login`, userData)
+      .then((response) => {
+        console.log(response.data); // Log the response data
+        navigate("/"); // Use navigate to redirect to the login page
+        return response.data;
+      })
+      .catch((error) => {
+        console.error(error.response.data.message || "Something went wrong"); // Log the error message
+        throw new Error(error.response.data.message || "Something went wrong");
+      });
+  };
 
-  return { register };
+  return { register, login };
 };
 
 export default useUserAPI;
