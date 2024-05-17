@@ -1,7 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import userAPI from "../api/userAPI";
 
 const RegisterPage = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log({ email, password });
+    try {
+      await userAPI.register({ email, password });
+      // Redirect to login page or show success message
+    } catch (error) {
+      console.error("Error registering user:", error.message);
+      // Handle error (e.g., show error message to the user)
+    }
+  };
+
   return (
     <div className="hero min-h-screen bg-base-200">
       <div className="hero-content flex-col lg:flex-row-reverse">
@@ -13,7 +29,7 @@ const RegisterPage = () => {
           </p>
         </div>
         <div className="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
-          <form className="card-body">
+          <form className="card-body" onSubmit={handleSubmit}>
             <div className="form-control">
               <label className="label">
                 <span className="label-text">Email</span>
@@ -23,6 +39,8 @@ const RegisterPage = () => {
                 placeholder="email"
                 className="input input-bordered"
                 required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
             </div>
             <div className="form-control">
@@ -34,6 +52,8 @@ const RegisterPage = () => {
                 placeholder="password"
                 className="input input-bordered"
                 required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
               />
             </div>
             <div className="form-control mt-4">
@@ -45,7 +65,9 @@ const RegisterPage = () => {
               </span>
             </div>
             <div className="form-control mt-6">
-              <button className="btn btn-primary">Register</button>
+              <button type="submit" className="btn btn-primary">
+                Register
+              </button>
             </div>
           </form>
         </div>
