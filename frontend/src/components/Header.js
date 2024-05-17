@@ -36,7 +36,9 @@ const Header = () => {
                   <a>Homepage</a>
                 </li>
                 <li>
-                  <a>Portfolio</a>
+                  <Link to="/profile">
+                    <a>Portfolio</a>
+                  </Link>
                 </li>
                 <li>
                   <a>About</a>
@@ -45,7 +47,9 @@ const Header = () => {
             </div>
           </div>
           <div className="navbar-center">
-            <a className="btn btn-ghost text-xl">ClinicAid</a>
+            <Link to="/">
+              <a className="btn btn-ghost text-xl">ClinicAid</a>
+            </Link>
           </div>
           <div className="navbar-end">
             <button className="btn btn-ghost btn-circle">
