@@ -1,3 +1,5 @@
+// index.js
+
 import dotenv from "dotenv";
 dotenv.config();
 import express from "express";
@@ -13,11 +15,10 @@ const MONGODB_URI = process.env.MONGODB_URI;
 // Middleware
 app.use(bodyParser.json());
 app.use(cors());
-console.log("Middleware setup complete"); // Log to indicate middleware setup
-
+console.log("hello1");
 // Routes with /api prefix
 app.use("/api/users", userRoutes);
-console.log("Routes setup complete"); // Log to indicate routes setup
+// Add more routes as needed with /api prefix
 
 // Connect to MongoDB
 mongoose

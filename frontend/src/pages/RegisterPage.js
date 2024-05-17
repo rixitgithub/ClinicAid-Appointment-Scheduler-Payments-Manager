@@ -1,20 +1,24 @@
-import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import userAPI from "../api/userAPI";
+import React, { useState } from "react";
+import useUserAPI from "../api/userAPI.js";
 
 const RegisterPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const { register } = useUserAPI();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError(""); // Reset error message on new submit
     console.log({ email, password });
     try {
-      await userAPI.register({ email, password });
+      await register({ email, password });
+
       // Redirect to login page or show success message
     } catch (error) {
       console.error("Error registering user:", error.message);
-      // Handle error (e.g., show error message to the user)
+      setError(error.message); // Set error message from API response
     }
   };
 
@@ -56,6 +60,11 @@ const RegisterPage = () => {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
+            {error && (
+              <div className="form-control mt-4">
+                <span className="text-sm text-red-500">{error}</span>
+              </div>
+            )}
             <div className="form-control mt-4">
               <span className="text-sm text-neutral-500">
                 Already have an account?{" "}
