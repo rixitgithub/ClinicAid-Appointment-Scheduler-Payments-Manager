@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import useClinicAPI from "../api/useClinicAPI";
 
 const ProfilePage = () => {
   const [clinicName, setClinicName] = useState("");
@@ -12,8 +13,9 @@ const ProfilePage = () => {
   const [employeePassword, setEmployeePassword] = useState("");
   const [employees, setEmployees] = useState([]);
   const [specialization, setSpecialization] = useState("");
-
+  const [isSaving, setIsSaving] = useState(false);
   const [editIndex, setEditIndex] = useState(null); // Track index of employee being edited
+  const { createClinic } = useClinicAPI();
 
   const handleEdit = (index) => {
     // Remove the specific employee from the list
@@ -70,16 +72,28 @@ const ProfilePage = () => {
     setSpecialization("");
   };
 
-  const handleSave = () => {
-    // Save profile data and employees
-    console.log("Saving profile data:", {
-      clinicName,
-      aboutClinic,
+  const handleSave = async () => {
+    setIsSaving(true); // Set isSaving to true when saving
+    const clinicData = {
+      name: clinicName,
+      about: aboutClinic,
       address,
-      number,
-    });
-    console.log("Saving employees:", employees);
-    // Perform save operation here
+      phone: number,
+      employees,
+    };
+
+    try {
+      const token = localStorage.getItem("token"); // Retrieve token from local storage or context
+      if (!token) {
+        throw new Error("Authentication token not found");
+      }
+      await createClinic(clinicData, token); // Call the API to create the clinic
+      console.log("Clinic created successfully");
+    } catch (error) {
+      console.error("Error creating clinic:", error.message);
+    } finally {
+      setIsSaving(false); // Set isSaving to false after saving (whether successful or not)
+    }
   };
 
   return (
@@ -383,7 +397,7 @@ const ProfilePage = () => {
               !clinicName || !address || !number || employees.length === 0
             }
           >
-            Save
+            {isSaving ? "Saving..." : "Save"}
           </button>
         </div>
       </div>

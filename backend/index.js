@@ -1,5 +1,3 @@
-// index.js
-
 import dotenv from "dotenv";
 dotenv.config();
 import express from "express";
@@ -7,6 +5,7 @@ import mongoose from "mongoose";
 import bodyParser from "body-parser";
 import cors from "cors";
 import userRoutes from "./routes/userRoutes.js";
+import clinicRoutes from "./routes/clinicRoutes.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -15,10 +14,10 @@ const MONGODB_URI = process.env.MONGODB_URI;
 // Middleware
 app.use(bodyParser.json());
 app.use(cors());
-console.log("hello1");
+
 // Routes with /api prefix
 app.use("/api/users", userRoutes);
-// Add more routes as needed with /api prefix
+app.use("/api/clinics", clinicRoutes);
 
 // Connect to MongoDB
 mongoose
