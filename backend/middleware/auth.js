@@ -1,25 +1,18 @@
 import jwt from "jsonwebtoken";
+const JWT_SECRET = process.env.JWT_SECRET;
 
 export const verifyToken = (req, res, next) => {
-  const token = req.header("Authorization");
-  console.log({ token });
-  if (!token) {
-    return res
-      .status(401)
-      .json({ message: "Access denied, no token provided" });
-  }
-
-  const tokenValue = token.split(" ")[1]; // Extract the token value after removing the "Bearer " prefix
-  console.log("hello");
-  console.log({ tokenValue });
-  console.log("this" + process.env.JWT_SECRET);
-  jwt.verify(tokenValue, process.env.JWT_SECRET, (error, verified) => {
-    if (error) {
-      console.log("why");
-      return res.status(400).json({ message: "Invalid token" });
-    } else {
-      req.user = verified;
+  const authHeader = req.headers.authorization;
+  if (authHeader) {
+    const token = authHeader.split(" ")[1];
+    jwt.verify(token, JWT_SECRET, (err, decoded) => {
+      if (err) {
+        return res.sendStatus(403);
+      }
+      req.user = decoded;
       next();
-    }
-  });
+    });
+  } else {
+    res.sendStatus(401);
+  }
 };

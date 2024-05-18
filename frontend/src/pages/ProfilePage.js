@@ -84,6 +84,7 @@ const ProfilePage = () => {
 
     try {
       const token = localStorage.getItem("token"); // Retrieve token from local storage or context
+      console.log({ token });
       if (!token) {
         throw new Error("Authentication token not found");
       }

@@ -14,6 +14,7 @@ const useClinicAPI = () => {
       .post(`${API_URL}/api/clinics`, clinicData, {
         headers: {
           Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
         },
       })
       .then((response) => {

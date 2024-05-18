@@ -27,6 +27,7 @@ const useUserAPI = () => {
       .post(`${API_URL}/api/users/login`, userData)
       .then((response) => {
         console.log(response.data); // Log the response data
+        localStorage.setItem("token", response.data.token);
         navigate("/"); // Use navigate to redirect to the login page
         return response.data;
       })
