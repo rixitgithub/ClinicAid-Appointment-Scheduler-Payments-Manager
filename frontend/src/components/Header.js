@@ -33,15 +33,13 @@ const Header = () => {
                 className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
               >
                 <li>
-                  <a>Homepage</a>
+                  <Link to="/clinic">My Clinic</Link>
                 </li>
                 <li>
-                  <Link to="/profile">
-                    <a>Portfolio</a>
-                  </Link>
+                  <Link to="/profile">Portfolio</Link>
                 </li>
                 <li>
-                  <a>About</a>
+                  <Link to="/settings">Settings</Link>
                 </li>
               </ul>
             </div>

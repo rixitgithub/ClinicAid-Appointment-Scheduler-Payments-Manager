@@ -7,6 +7,10 @@ import AboutPage from "./pages/AboutPage";
 import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
 import ProfilePage from "./pages/ProfilePage";
+import ClinicDetailsPage from "./pages/ClinicDetailsPage";
+import Settings from "./pages/Settings";
+import ManagePage from "./pages/ManagePage";
+import OverviewPage from "./pages/OverviewPage";
 // Import other pages as needed
 
 function App() {
@@ -21,6 +25,12 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/clinic" element={<ClinicDetailsPage />} />
+            <Route path="/:clinicId/manage" element={<ManagePage />} />
+            <Route path="/:clinicId/overview" element={<OverviewPage />} />
+
+            <Route path="/settings" element={<Settings />} />
+
             {/* Add other routes here */}
           </Routes>
         </main>

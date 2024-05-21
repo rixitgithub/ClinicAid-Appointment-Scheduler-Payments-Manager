@@ -24,6 +24,26 @@ const clinicSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  about: {
+    type: String,
+    required: true,
+  },
+  phone: {
+    type: String,
+    required: true,
+  },
+  schedules: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Schedule",
+    },
+  ],
+  patients: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Patient",
+    },
+  ],
 });
 
 const Clinic = mongoose.model("Clinic", clinicSchema);

@@ -6,6 +6,8 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import userRoutes from "./routes/userRoutes.js";
 import clinicRoutes from "./routes/clinicRoutes.js";
+import patientRoutes from "./routes/patientRoutes.js";
+import scheduleRoutes from "./routes/scheduleRoutes.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -18,6 +20,8 @@ app.use(cors());
 // Routes with /api prefix
 app.use("/api/users", userRoutes);
 app.use("/api/clinics", clinicRoutes);
+app.use("/api/patients", patientRoutes);
+app.use("/api/schedules", scheduleRoutes);
 
 // Connect to MongoDB
 mongoose

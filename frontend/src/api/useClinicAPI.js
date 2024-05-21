@@ -1,5 +1,3 @@
-// useClinicAPI.js
-
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -9,7 +7,6 @@ const useClinicAPI = () => {
   const navigate = useNavigate();
 
   const createClinic = (clinicData, token) => {
-    console.log({ clinicData }); // Log to indicate data being sent
     return axios
       .post(`${API_URL}/api/clinics`, clinicData, {
         headers: {
@@ -18,17 +15,65 @@ const useClinicAPI = () => {
         },
       })
       .then((response) => {
-        console.log(response.data); // Log the response data
-        navigate("/dashboard"); // Use navigate to redirect to the dashboard
+        navigate("/dashboard");
         return response.data;
       })
       .catch((error) => {
-        console.error(error.response.data.message || "Something went wrong"); // Log the error message
-        throw new Error(error.response.data.message || "Something went wrong");
+        throw new Error(
+          error.response?.data?.message || "Something went wrong"
+        );
       });
   };
 
-  return { createClinic };
+  const getClinic = (token) => {
+    return axios
+      .get(`${API_URL}/api/clinics/creator`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => response.data)
+      .catch((error) => {
+        throw new Error(
+          error.response?.data?.message || "Something went wrong"
+        );
+      });
+  };
+
+  const ClinicDetailsById = (clinicId, token) => {
+    console.log(clinicId, token);
+    return axios
+      .get(`${API_URL}/api/clinics/id/${clinicId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => response.data)
+      .catch((error) => {
+        throw new Error(
+          error.response?.data?.message || "Something went wrong"
+        );
+      });
+  };
+
+  const searchClinics = async (query, token) => {
+    console.log(query, token);
+    const response = await axios.get(
+      `${API_URL}/api/clinics/search?q=${query}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    console.log(response.data);
+    return response.data;
+  };
+
+  return { createClinic, getClinic, ClinicDetailsById, searchClinics };
 };
 
 export default useClinicAPI;
