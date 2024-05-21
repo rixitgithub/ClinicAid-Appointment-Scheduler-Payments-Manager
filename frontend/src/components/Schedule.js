@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
+import { format, addDays, subDays } from "date-fns";
 
 const Schedule = ({ schedule, doctorId }) => {
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState(new Date());
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -12,7 +14,9 @@ const Schedule = ({ schedule, doctorId }) => {
   }, []);
 
   const filteredSchedule = schedule.filter(
-    (event) => event.doctorId._id === doctorId
+    (event) =>
+      event.doctorId._id === doctorId &&
+      new Date(event.date).toDateString() === selectedDate.toDateString()
   );
 
   const timeSlots = [];
@@ -45,7 +49,7 @@ const Schedule = ({ schedule, doctorId }) => {
     const index = timeSlots.findIndex(
       (slot) => convertTo24HourFormat(slot) === convertTo24HourFormat(startTime)
     );
-    return index * 20; // 20px height for each 15-minute slot
+    return index * 20 + 30; // Adjusted: 20px height for each 15-minute slot plus 30px margin
   };
 
   const calculateEventHeight = (startTime, endTime) => {
@@ -67,7 +71,6 @@ const Schedule = ({ schedule, doctorId }) => {
     };
 
     const formatter = new Intl.DateTimeFormat([], options);
-    console.log(formatter);
     const [hourString, minuteString] = formatter
       .formatToParts(currentTime)
       .filter((part) => part.type === "hour" || part.type === "minute")
@@ -80,23 +83,43 @@ const Schedule = ({ schedule, doctorId }) => {
     ).padStart(2, "0")}:${String(currentMinute).padStart(2, "0")} ${
       currentHour < 12 ? "AM" : "PM"
     }`;
-    console.log(timeString);
+
     const index = timeSlots.findIndex(
       (slot) =>
         convertTo24HourFormat(slot) === convertTo24HourFormat(timeString)
     );
-    return index * 20;
+    return index * 20 + 30; // Adjusted: 20px height for each 15-minute slot plus 30px margin
+  };
+
+  const handlePrevDay = () => {
+    setSelectedDate((prevDate) => subDays(prevDate, 1));
+  };
+
+  const handleNextDay = () => {
+    setSelectedDate((prevDate) => addDays(prevDate, 1));
   };
 
   return (
     <div className="relative h-full">
+      <div className="flex justify-between items-center mb-4">
+        <button onClick={handlePrevDay} className="btn btn-primary">
+          Previous Day
+        </button>
+        {console.log(selectedDate)}
+        <h2 className="text-xl font-semibold">
+          {format(selectedDate, "dd MMMM yyyy")}
+        </h2>
+        <button onClick={handleNextDay} className="btn btn-primary">
+          Next Day
+        </button>
+      </div>
       {timeSlots.map((slot, index) => (
         <React.Fragment key={index}>
           <div
             className="absolute left-0 text-sm text-gray-500"
             style={{
-              top: `${index * 20}px`,
-              transform: "translateY(-50%)", // Center align the text vertically
+              top: `${index * 20 + 30}px`, // Adjusted: Add margin at the top
+              transform: "translateY(-50%)",
             }}
           >
             {slot.endsWith(":00 AM") || slot.endsWith(":00 PM") ? slot : ""}
@@ -104,8 +127,8 @@ const Schedule = ({ schedule, doctorId }) => {
           <div
             className="absolute left-20 right-0 border-t border-gray-300"
             style={{
-              top: `${index * 20}px`,
-              marginTop: "0.2rem", // Add spacing between lines
+              top: `${index * 20 + 30}px`, // Adjusted: Add margin at the top
+              marginTop: "0.2rem",
             }}
           />
         </React.Fragment>
@@ -123,7 +146,6 @@ const Schedule = ({ schedule, doctorId }) => {
           <div className="font-semibold">
             {event.patientId.name} - {event.patientId.phoneNumber}
           </div>
-          <div className="font-light"></div>
           <div className="text-sm">
             {event.startTime} - {event.endTime}
           </div>
