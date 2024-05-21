@@ -1,5 +1,6 @@
 import React, { useState, useRef } from "react";
 import useScheduleAPI from "../api/useScheduleAPI";
+import { formatISODate } from "../utils/formatDate";
 
 const Patients = ({ patients, doctors, clinicId }) => {
   const [selectedPatient, setSelectedPatient] = useState(null);
@@ -72,7 +73,15 @@ const Patients = ({ patients, doctors, clinicId }) => {
           key={index}
           className="mb-2 p-2 cursor-pointer bg-gray-100 hover:bg-gray-200 rounded-md transition-colors duration-300"
         >
-          <p onClick={() => openModal(patient)}>{patient.name}</p>
+          <div className="flex justify-between items-center">
+            <p onClick={() => openModal(patient)}>
+              <strong>{patient.name} </strong>(
+              {formatISODate(patient.appointmentDate)})
+            </p>
+            <p onClick={() => openModal(patient)} className="ml-4 text-right">
+              Dr. {patient.doctorChoice.name}
+            </p>
+          </div>
         </div>
       ))}
       {selectedPatient && (
@@ -109,9 +118,8 @@ const Patients = ({ patients, doctors, clinicId }) => {
                 </p>
                 <p>
                   <strong>Appointment Date:</strong>{" "}
-                  {new Date(
-                    selectedPatient.appointmentDate
-                  ).toLocaleDateString()}
+                  {formatISODate(selectedPatient.appointmentDate)}{" "}
+                  {/* Format the appointment date */}
                 </p>
                 <hr className="my-8" />
                 <div>
