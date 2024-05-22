@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { format, addDays, subDays } from "date-fns";
+import useScheduleAPI from "../api/useScheduleAPI";
 
 const Schedule = ({ schedule, doctorId }) => {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const { updateEventStatus } = useScheduleAPI();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -99,6 +101,15 @@ const Schedule = ({ schedule, doctorId }) => {
     setSelectedDate((prevDate) => addDays(prevDate, 1));
   };
 
+  const handleStatusChange = async (eventId, status) => {
+    try {
+      await updateEventStatus(eventId, status);
+      window.location.reload();
+    } catch (error) {
+      console.error(`Failed to update status for event ${eventId}:`, error);
+    }
+  };
+
   return (
     <div className="relative h-full">
       <div className="flex justify-between items-center mb-4">
@@ -136,21 +147,46 @@ const Schedule = ({ schedule, doctorId }) => {
       {filteredSchedule.map((event) => (
         <div
           key={event.id}
-          className="absolute left-20 bg-blue-500 text-white p-2 rounded"
+          className={`absolute left-20 p-2 rounded border ${
+            event.status === "missed"
+              ? "border-black bg-red-500"
+              : event.status === "completed"
+              ? "border-black bg-green-500"
+              : "border-black bg-blue-500"
+          } text-white`}
           style={{
             top: `${calculateEventTop(event.startTime)}px`,
             height: `${calculateEventHeight(event.startTime, event.endTime)}px`,
             width: "calc(100% - 5rem)",
           }}
         >
-          <div className="font-semibold">
-            {event.patientId.name} - {event.patientId.phoneNumber}
+          <div className="flex justify-between">
+            <div className="font-semibold">
+              {event.patientId.name} - {event.patientId.phoneNumber}
+            </div>
+            {event.status === "upcoming" && (
+              <div className="flex space-x-2">
+                <button
+                  onClick={() => handleStatusChange(event._id, "completed")}
+                  className="bg-green-600 hover:bg-green-700 text-white px-2 py-1 rounded"
+                >
+                  ✔
+                </button>
+                <button
+                  onClick={() => handleStatusChange(event._id, "missed")}
+                  className="bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded"
+                >
+                  ✘
+                </button>
+              </div>
+            )}
           </div>
           <div className="text-sm">
             {event.startTime} - {event.endTime}
           </div>
         </div>
       ))}
+
       <div
         className="absolute left-20 right-0 h-0.5 bg-red-500"
         style={{

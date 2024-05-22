@@ -11,6 +11,7 @@ import ClinicDetailsPage from "./pages/ClinicDetailsPage";
 import Settings from "./pages/Settings";
 import ManagePage from "./pages/ManagePage";
 import OverviewPage from "./pages/OverviewPage";
+import AppointmentPage from "./pages/AppointmentPage";
 // Import other pages as needed
 
 function App() {
@@ -29,7 +30,7 @@ function App() {
             <Route path="/:clinicId/manage" element={<ManagePage />} />
             <Route path="/:clinicId/overview" element={<OverviewPage />} />
 
-            <Route path="/settings" element={<Settings />} />
+            <Route path="/appointments" element={<AppointmentPage />} />
 
             {/* Add other routes here */}
           </Routes>

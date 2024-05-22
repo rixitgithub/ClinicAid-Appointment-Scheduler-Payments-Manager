@@ -20,13 +20,19 @@ const Patients = ({ patients, doctors, clinicId }) => {
   };
 
   const closeModal = () => {
+    // Clear form fields when closing modal
+    setSelectedDoctor("");
+    setDate("");
+    setStartTime("");
+    setEndTime("");
+
     if (modalRef.current) {
       modalRef.current.close();
     }
   };
 
   const handleBookingSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Prevent default form submission behavior
 
     const scheduleData = {
       date,

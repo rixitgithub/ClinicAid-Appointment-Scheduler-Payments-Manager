@@ -6,7 +6,7 @@ const { Schema } = mongoose;
 const scheduleSchema = new Schema({
   doctorId: {
     type: Schema.Types.ObjectId,
-    ref: "Doctor", // Reference to the Doctor model
+    ref: "Employee",
     required: true,
   },
   date: {
@@ -23,16 +23,20 @@ const scheduleSchema = new Schema({
   },
   patientId: {
     type: Schema.Types.ObjectId,
-    ref: "Patient", // Reference to the Patient model
+    ref: "Patient",
     required: true,
   },
   clinicId: {
     type: Schema.Types.ObjectId,
     ref: "Clinic",
   },
+  status: {
+    type: String,
+    enum: ["upcoming", "completed", "missed"],
+    default: "upcoming",
+  },
 });
 
-// Create the Schedule model
 const Schedule = mongoose.model("Schedule", scheduleSchema);
 
 export default Schedule;

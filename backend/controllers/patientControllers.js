@@ -3,9 +3,15 @@ import Patient from "../models/Patient.js";
 // Create a new patient
 export const createPatient = async (req, res) => {
   try {
-    console.log(req.body);
-    const newPatient = new Patient(req.body);
+    const { body, user } = req;
+    console.log(req.user.id);
+    const newPatient = new Patient({
+      ...body,
+      userId: user.id,
+    });
     const savedPatient = await newPatient.save();
+    console.log("hi");
+    console.log(savedPatient);
     res.status(201).json(savedPatient);
   } catch (error) {
     res.status(500).json({ message: "Error creating patient", error });

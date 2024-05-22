@@ -10,10 +10,18 @@ const patientSchema = new Schema({
   },
   gender: {
     type: String,
-    enum: ["male", "female", "other"],
+    enum: ["male", "female", "transgender", "other", "prefer_not_to_say"],
   },
   maritalStatus: {
     type: String,
+    enum: [
+      "single",
+      "married",
+      "separated",
+      "divorced",
+      "living_together",
+      "same_sex_relationship",
+    ],
   },
   address: {
     type: String,
@@ -34,6 +42,11 @@ const patientSchema = new Schema({
   clinicId: {
     type: Schema.Types.ObjectId,
     ref: "Clinic",
+  },
+  userId: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
   },
 });
 
