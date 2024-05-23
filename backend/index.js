@@ -8,6 +8,9 @@ import userRoutes from "./routes/userRoutes.js";
 import clinicRoutes from "./routes/clinicRoutes.js";
 import patientRoutes from "./routes/patientRoutes.js";
 import scheduleRoutes from "./routes/scheduleRoutes.js";
+import emailRoutes from "./routes/emailRoutes.js";
+import cron from "node-cron";
+import sendReminders from "./routes/sendRemindersRoute.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -22,6 +25,11 @@ app.use("/api/users", userRoutes);
 app.use("/api/clinics", clinicRoutes);
 app.use("/api/patients", patientRoutes);
 app.use("/api/schedules", scheduleRoutes);
+app.use("/api/email", emailRoutes);
+
+cron.schedule("27 17 * * *", () => {
+  sendReminders(); // Call your route for sending reminders
+});
 
 // Connect to MongoDB
 mongoose

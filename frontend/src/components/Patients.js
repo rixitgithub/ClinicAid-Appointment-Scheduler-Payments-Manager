@@ -1,5 +1,6 @@
 import React, { useState, useRef } from "react";
 import useScheduleAPI from "../api/useScheduleAPI";
+import useEmailAPI from "../api/useEmailAPI"; // Import the hook to handle email sending
 import { formatISODate } from "../utils/formatDate";
 
 const Patients = ({ patients, doctors, clinicId }) => {
@@ -11,6 +12,7 @@ const Patients = ({ patients, doctors, clinicId }) => {
   const modalRef = useRef(null);
 
   const { createSchedule } = useScheduleAPI();
+  const { sendEmail } = useEmailAPI(); // Use the hook to handle email sending
 
   const openModal = (patient) => {
     setSelectedPatient(patient);
@@ -46,6 +48,15 @@ const Patients = ({ patients, doctors, clinicId }) => {
     console.log(scheduleData);
     try {
       const result = await createSchedule(scheduleData, token);
+
+      // If schedule is successfully created, send email
+      if (result) {
+        const emailData = {
+          to: selectedPatient._id,
+          scheduleData,
+        };
+        await sendEmail(emailData, token);
+      }
     } catch (error) {
       console.error("Error creating schedule:", error);
     }
