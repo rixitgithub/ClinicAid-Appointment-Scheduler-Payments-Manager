@@ -9,6 +9,7 @@ import clinicRoutes from "./routes/clinicRoutes.js";
 import patientRoutes from "./routes/patientRoutes.js";
 import scheduleRoutes from "./routes/scheduleRoutes.js";
 import emailRoutes from "./routes/emailRoutes.js";
+import logRoutes from "./routes/logRoutes.js";
 import cron from "node-cron";
 import sendReminders from "./routes/sendRemindersRoute.js";
 
@@ -26,6 +27,7 @@ app.use("/api/clinics", clinicRoutes);
 app.use("/api/patients", patientRoutes);
 app.use("/api/schedules", scheduleRoutes);
 app.use("/api/email", emailRoutes);
+app.use("/api/logs", logRoutes);
 
 cron.schedule("27 17 * * *", () => {
   sendReminders(); // Call your route for sending reminders

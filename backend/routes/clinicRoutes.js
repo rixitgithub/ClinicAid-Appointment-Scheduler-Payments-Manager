@@ -96,7 +96,6 @@ router.get("/id/:clinicId", verifyToken, async (req, res) => {
       patients,
       schedules,
     };
-    console.log(clinicDetails.schedules);
     res.json(clinicDetails); // Send combined data as JSON response
   } catch (error) {
     console.error("Error fetching clinic details:", error);
@@ -106,15 +105,11 @@ router.get("/id/:clinicId", verifyToken, async (req, res) => {
 
 router.get("/search", verifyToken, async (req, res) => {
   try {
-    console.log("Search endpoint hit");
     const searchQuery = req.query.q;
-    console.log("Search query:", searchQuery);
 
     const clinics = await Clinic.find({
       name: new RegExp(searchQuery, "i"),
     }).select("name id address");
-
-    console.log("Clinics found:", clinics);
 
     res.json(clinics);
   } catch (error) {

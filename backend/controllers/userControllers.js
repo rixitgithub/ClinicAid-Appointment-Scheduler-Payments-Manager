@@ -8,7 +8,6 @@ dotenv.config();
 const SECRET = process.env.JWT_SECRET;
 export const createUser = async (req, res) => {
   const { email, password } = req.body;
-  console.log(req.body);
   const user = await User.findOne({ email });
 
   if (user) {
@@ -20,15 +19,11 @@ export const createUser = async (req, res) => {
     email,
     password: hashedPassword,
   });
-  console.log("uuuuu");
   await newUser.save();
-  console.log("success");
   res.json({ message: "User created successfully" });
 };
 
 export const loginUser = async (req, res) => {
-  console.log(SECRET);
-  console.log(req.body);
   const { email, password } = req.body;
   const user = await User.findOne({ email });
 
@@ -45,6 +40,5 @@ export const loginUser = async (req, res) => {
   const token = jwt.sign({ id: user._id, email: user.email }, SECRET, {
     expiresIn: "1h",
   });
-  console.log(token + "success");
   res.json({ message: "Login successful", token });
 };

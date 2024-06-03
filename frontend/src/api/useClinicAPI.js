@@ -73,7 +73,30 @@ const useClinicAPI = () => {
     return response.data;
   };
 
-  return { createClinic, getClinic, ClinicDetailsById, searchClinics };
+  const getLogsByClinicId = (clinicId, token, date) => {
+    return axios
+      .get(`${API_URL}/api/logs/${clinicId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        params: { date }, // Pass the date as a query parameter
+      })
+      .then((response) => response.data)
+      .catch((error) => {
+        throw new Error(
+          error.response?.data?.message || "Something went wrong"
+        );
+      });
+  };
+
+  return {
+    createClinic,
+    getClinic,
+    ClinicDetailsById,
+    searchClinics,
+    getLogsByClinicId,
+  };
 };
 
 export default useClinicAPI;

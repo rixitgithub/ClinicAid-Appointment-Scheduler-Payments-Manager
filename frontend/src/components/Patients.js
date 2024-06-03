@@ -34,8 +34,7 @@ const Patients = ({ patients, doctors, clinicId }) => {
   };
 
   const handleBookingSubmit = async (e) => {
-    e.preventDefault(); // Prevent default form submission behavior
-
+    e.preventDefault();
     const scheduleData = {
       date,
       startTime,
@@ -48,8 +47,6 @@ const Patients = ({ patients, doctors, clinicId }) => {
     console.log(scheduleData);
     try {
       const result = await createSchedule(scheduleData, token);
-
-      // If schedule is successfully created, send email
       if (result) {
         const emailData = {
           to: selectedPatient._id,

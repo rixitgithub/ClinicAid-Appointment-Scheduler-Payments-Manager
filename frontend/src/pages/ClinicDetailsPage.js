@@ -78,7 +78,7 @@ const ClinicDetailsPage = () => {
         <hr className="my-8" />
         <ClinicStats />
         <hr className="my-8" />
-        <ClinicLogs />
+        <ClinicLogs clinic={clinic} />
         <hr className="my-8" />
         <ClinicEmployeeList employees={clinic.employees} />
       </div>
