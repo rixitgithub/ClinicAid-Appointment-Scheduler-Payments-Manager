@@ -1,6 +1,7 @@
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js"; // Adjust the path as needed
+import Clinic from "../models/Clinic.js"; // Adjust the path as needed
 
 import dotenv from "dotenv";
 dotenv.config();
@@ -41,4 +42,31 @@ export const loginUser = async (req, res) => {
     expiresIn: "1h",
   });
   res.json({ message: "Login successful", token });
+};
+
+export const checkLoginStatus = async (req, res) => {
+  try {
+    const token = req.headers.authorization.split(" ")[1];
+    if (!token) {
+      return res.status(401).json({ message: "Token not provided" });
+    }
+    jwt.verify(token, SECRET, async (err, decoded) => {
+      if (err) {
+        return res.status(401).json({ message: "Invalid token" });
+      }
+      const userId = decoded.id;
+      const user = await User.findById(userId);
+      if (!user) {
+        return res.status(401).json({ message: "User not found" });
+      }
+      // Check if the user is the owner of any clinic
+      const clinics = await Clinic.find({ createdBy: userId });
+      const isOwner = clinics.length > 0;
+      // If the token is valid and user exists, send back the login status along with the owner status
+      res.json({ isLoggedIn: true, isOwner });
+    });
+  } catch (error) {
+    console.error("Error checking login status:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
 };

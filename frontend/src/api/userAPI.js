@@ -37,7 +37,24 @@ const useUserAPI = () => {
       });
   };
 
-  return { register, login };
+  const checkLoginStatus = (token) => {
+    return axios
+      .get(`${API_URL}/api/users/checkLoginStatus`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        console.log(response.data); // Log the response data
+        return response.data; // Return the login status
+      })
+      .catch((error) => {
+        console.error("Error checking login status:", error);
+        return false; // Assume user is not logged in if an error occurs
+      });
+  };
+
+  return { register, login, checkLoginStatus };
 };
 
 export default useUserAPI;
