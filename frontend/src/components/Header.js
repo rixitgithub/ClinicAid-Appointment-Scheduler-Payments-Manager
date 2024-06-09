@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import useUserAPI from "../api/userAPI.js"; // Import the checkLoginStatus function
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
@@ -8,6 +8,7 @@ const Header = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isOwner, setIsOwner] = useState(false);
   const { checkLoginStatus, logout } = useUserAPI(); // Import the logout function
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Call the checkLoginStatus function when the component mounts
@@ -29,6 +30,8 @@ const Header = () => {
     // Perform any additional logout logic here
 
     setIsLoggedIn(false); // Update isLoggedIn state to false after logout
+    navigate("/");
+    window.location.reload(); // Refresh the page after logout
   };
 
   return (

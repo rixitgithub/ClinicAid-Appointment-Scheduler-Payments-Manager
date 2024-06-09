@@ -6,6 +6,8 @@ import { verifyToken } from "../middleware/auth.js";
 import Employee from "../models/Employee.js";
 import Schedule from "../models/Schedule.js";
 import Patient from "../models/Patient.js";
+import { Types } from "mongoose";
+const { ObjectId } = Types;
 
 const router = express.Router();
 
@@ -73,6 +75,18 @@ router.get("/id/:clinicId", verifyToken, async (req, res) => {
       return res.status(404).json({ message: "Clinic not found" });
     }
 
+    // Extract user details from the token
+    const userId = new ObjectId(req.user.id); // Convert userId to ObjectId
+    const userEmail = req.user.email; // Extract email from the token
+
+    // Convert createdBy to ObjectId for comparison
+    const createdBy = new ObjectId(clinic.createdBy); // Convert createdBy to ObjectId
+
+    // Check if the user is authorized (clinic owner or employee)
+    const isAuthorized =
+      createdBy.equals(userId) ||
+      clinic.employees.some((employee) => employee.email === userEmail);
+    console.log("author", isAuthorized);
     // Fetch patients separately
     const patients = await Patient.find({ clinicId }).populate({
       path: "doctorChoice",
@@ -96,7 +110,14 @@ router.get("/id/:clinicId", verifyToken, async (req, res) => {
       patients,
       schedules,
     };
-    res.json(clinicDetails); // Send combined data as JSON response
+
+    // If user is authorized, send additional response
+    if (isAuthorized) {
+      return res.json({ clinicDetails, allowed: true });
+    }
+
+    // Otherwise, send only clinic details
+    res.json({ clinicDetails, allowed: false });
   } catch (error) {
     console.error("Error fetching clinic details:", error);
     res.status(500).json({ message: "Internal server error" });

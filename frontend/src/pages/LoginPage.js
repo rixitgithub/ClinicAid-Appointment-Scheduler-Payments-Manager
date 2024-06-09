@@ -13,7 +13,7 @@ const LoginPage = () => {
     // Handle login logic here
     try {
       await login({ email, password });
-
+      window.location.reload();
       // Redirect to login page or show success message
     } catch (error) {
       console.error("Error registering user:", error.message);
