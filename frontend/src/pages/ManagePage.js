@@ -64,9 +64,9 @@ const ManagePage = () => {
   }
 
   return (
-    <div className="flex h-screen">
+    <div className="flex flex-col sm:flex-row h-screen">
       {/* Left Section */}
-      <div className="flex-[3] h-full bg-gray-200 flex flex-col">
+      <div className="flex-[3] h-full bg-gray-200 flex flex-col overflow-auto">
         <Doctors doctors={clinicDetails.employees} />
         <Patients
           clinicId={clinicId}
