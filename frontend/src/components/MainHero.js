@@ -43,52 +43,29 @@ const MainHero = () => {
 
   return (
     <div className="hero min-h-screen bg-base-200">
-      <div className="hero-content text-center">
-        <div className="">
-          <h1 className="text-7xl font-bold">FIRST AID TO YOUR CLINIC</h1>
-          <p className="py-6">
-            Effortlessly manage appointments, referrals, and payments with
-            ClinicAid: your all-in-one clinic management solution.
-          </p>
-          <div className="relative flex justify-center items-center space-x-4">
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={handleSearchChange}
-              placeholder="Name of the Clinic"
-              className="input input-bordered w-24 md:w-auto"
-            />
-            <Link to={`/${selectedClinicId}/overview`}>
-              <button className="btn btn-primary">Get Started</button>
-            </Link>
-
-            {loading && (
-              <div className="absolute top-12 left-0 right-0 bg-white shadow-lg rounded-lg z-10">
-                <span className="loading loading-bars loading-md"></span>
-              </div>
-            )}
-            {noClinicFound && (
-              <div className="absolute top-12 left-0 right-0 bg-white shadow-lg rounded-lg z-10">
-                <p>No clinic found. Try another name.</p>
-              </div>
-            )}
-            {suggestions.length > 0 && !loading && (
-              <div className="absolute top-12 left-0 right-0 bg-white shadow-lg rounded-lg z-10">
-                <ul>
-                  {suggestions.map((suggestion) => (
-                    <li
-                      key={suggestion._id}
-                      className="p-2 hover:bg-gray-200 cursor-pointer"
-                      onClick={() => handleSuggestionClick(suggestion)}
-                    >
-                      {suggestion.name} , {suggestion.address}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
+      {/* Comparison Section */}
+      <div className="diff aspect-[16/9] w-full mb-8">
+        <div className="diff-item-1 relative w-1/2 h-full bg-gray-100">
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="bg-primary text-primary-content text-3xl md:text-9xl font-black grid place-content-center p-4">
+              SAD & TIRING
+              <p className="text-lg md:text-2xl mt-4">
+                Manual Appointment Management
+              </p>
+            </div>
           </div>
         </div>
+        <div className="diff-item-2 relative w-1/2 h-full bg-white">
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="bg-green-500 text-white text-3xl md:text-9xl font-black grid place-content-center p-4">
+              HAPPY & FAST
+              <p className="text-lg md:text-2xl mt-4">
+                Effortless Clinic Management
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="diff-resizer absolute inset-y-0 left-1/2 w-1 bg-gray-400"></div>
       </div>
     </div>
   );
