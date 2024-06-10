@@ -82,22 +82,26 @@ const Patients = ({ patients, doctors, clinicId }) => {
   return (
     <div className="flex-1 bg-white p-4">
       <h2 className="text-xl font-semibold mb-4">Patients</h2>
-      {patients.map((patient, index) => (
-        <div
-          key={index}
-          className="mb-2 p-2 cursor-pointer bg-gray-100 hover:bg-gray-200 rounded-md transition-colors duration-300"
-        >
-          <div className="flex justify-between items-center">
-            <p onClick={() => openModal(patient)}>
-              <strong>{patient.name} </strong>(
-              {formatISODate(patient.appointmentDate)})
-            </p>
-            <p onClick={() => openModal(patient)} className="ml-4 text-right">
-              Dr. {patient.doctorChoice.name}
-            </p>
+      <div className="max-h-80 overflow-y-auto">
+        {" "}
+        {/* Fixed height and scroll */}
+        {patients.map((patient, index) => (
+          <div
+            key={index}
+            className="mb-2 p-2 cursor-pointer bg-gray-100 hover:bg-gray-200 rounded-md transition-colors duration-300"
+          >
+            <div className="flex justify-between items-center">
+              <p onClick={() => openModal(patient)}>
+                <strong>{patient.name} </strong>(
+                {formatISODate(patient.appointmentDate)})
+              </p>
+              <p onClick={() => openModal(patient)} className="ml-4 text-right">
+                Dr. {patient.doctorChoice.name}
+              </p>
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
       {selectedPatient && (
         <div>
           <dialog id="patient_modal" className="modal" ref={modalRef}>
