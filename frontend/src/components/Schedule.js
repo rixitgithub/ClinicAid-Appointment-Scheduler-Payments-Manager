@@ -64,35 +64,6 @@ const Schedule = ({ schedule, doctorId }) => {
     return (endIndex - startIndex) * 20; // 20px height for each 15-minute slot
   };
 
-  const calculateCurrentTimeTop = () => {
-    const options = {
-      timeZone: "Asia/Kolkata",
-      hour12: false,
-      hour: "2-digit",
-      minute: "2-digit",
-    };
-
-    const formatter = new Intl.DateTimeFormat([], options);
-    const [hourString, minuteString] = formatter
-      .formatToParts(currentTime)
-      .filter((part) => part.type === "hour" || part.type === "minute")
-      .map((part) => part.value);
-
-    const currentHour = parseInt(hourString, 10);
-    const currentMinute = parseInt(minuteString, 10);
-    const timeString = `${String(
-      currentHour % 12 === 0 ? 12 : currentHour % 12
-    ).padStart(2, "0")}:${String(currentMinute).padStart(2, "0")} ${
-      currentHour < 12 ? "AM" : "PM"
-    }`;
-
-    const index = timeSlots.findIndex(
-      (slot) =>
-        convertTo24HourFormat(slot) === convertTo24HourFormat(timeString)
-    );
-    return index * 20 + 30; // Adjusted: 20px height for each 15-minute slot plus 30px margin
-  };
-
   const handlePrevDay = () => {
     setSelectedDate((prevDate) => subDays(prevDate, 1));
   };
@@ -112,7 +83,7 @@ const Schedule = ({ schedule, doctorId }) => {
 
   return (
     <div className="relative h-full">
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex justify-between items-center mb-8">
         <button onClick={handlePrevDay} className="btn btn-primary">
           Previous Day
         </button>
@@ -129,7 +100,7 @@ const Schedule = ({ schedule, doctorId }) => {
           <div
             className="absolute left-0 text-sm text-gray-500"
             style={{
-              top: `${index * 20 + 30}px`, // Adjusted: Add margin at the top
+              top: `${index * 20 + 90}px`, // Adjusted: Add margin at the top
               transform: "translateY(-50%)",
             }}
           >
@@ -138,7 +109,7 @@ const Schedule = ({ schedule, doctorId }) => {
           <div
             className="absolute left-20 right-0 border-t border-gray-300"
             style={{
-              top: `${index * 20 + 30}px`, // Adjusted: Add margin at the top
+              top: `${index * 20 + 90}px`, // Adjusted: Add margin at the top
               marginTop: "0.2rem",
             }}
           />
@@ -186,13 +157,6 @@ const Schedule = ({ schedule, doctorId }) => {
           </div>
         </div>
       ))}
-
-      <div
-        className="absolute left-20 right-0 h-0.5 bg-red-500"
-        style={{
-          top: `${calculateCurrentTimeTop()}px`,
-        }}
-      />
     </div>
   );
 };
