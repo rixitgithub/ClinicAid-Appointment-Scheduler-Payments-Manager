@@ -52,8 +52,8 @@ const OverviewPage = () => {
         const token = localStorage.getItem("token");
         console.log(clinicId, token);
         const response = await ClinicDetailsById(clinicId, token);
-        console.log("this is response" + response);
-        setClinicDetails(response);
+        console.log("this is response", response);
+        setClinicDetails(response.clinicDetails);
       } catch (error) {
         console.error("Error fetching clinic details:", error);
       }

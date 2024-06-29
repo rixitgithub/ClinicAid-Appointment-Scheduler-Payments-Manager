@@ -126,7 +126,13 @@ const MainHero = () => {
         {/* Resizer */}
         <div className="diff-resizer bg-gray-400"></div>
       </div>
-
+      <div className="mb-7"></div>
+      <div className="mb-7"></div>
+      <div className="mb-7"></div>
+      <div className="mb-7"></div>
+      <div className="mb-7"></div>
+      <div className="mb-7"></div>
+      <div className="mb-7"></div>
       {/* Existing Content */}
       <div className="hero-content text-center">
         <div className="">
@@ -177,6 +183,12 @@ const MainHero = () => {
           </div>
         </div>
       </div>
+      <div className="mb-7"></div>
+      <div className="mb-7"></div>
+      <div className="mb-7"></div>
+      <div className="mb-7"></div>
+      <div className="mb-7"></div>
+      <div className="mb-7"></div>
     </div>
   );
 };
