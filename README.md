@@ -21,13 +21,33 @@ To install Clinic Aid, follow these steps:
     ```
 2. Navigate to the project directory:
     ```sh
-    cd clinic-aid
+    cd ClinicAid-Appointment-Scheduler-Payments-Manager
     ```
-3. Install dependencies:
+3. Navigate to Backend Folder:
+    ```sh
+    cd backend
+    ```
+4. Install dependencies:
     ```sh
     npm install
     ```
-4. Start the development server:
+5. Start the node server:
+    ```sh
+    node index.js
+    ```
+6. Open a new terminal window and navigate to the project directory again:
+    ```sh
+    cd ClinicAid-Appointment-Scheduler-Payments-Manager
+    ```
+7. Navigate to Frontend Folder:
+    ```sh
+    cd frontend
+    ```
+8. Install dependencies:
+    ```sh
+    npm install
+    ```
+9. Start the frontend server:
     ```sh
     npm start
     ```
