@@ -1,7 +1,8 @@
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const API_URL = "https://clinicaid-appointment-scheduler-payments.onrender.com";
+//const API_URL = "https://clinicaid-appointment-scheduler-payments.onrender.com";
+const API_URL = "http://localhost:3000";
 
 const useClinicAPI = () => {
   const navigate = useNavigate();
@@ -58,13 +59,11 @@ const useClinicAPI = () => {
       });
   };
 
-  const searchClinics = async (query, token) => {
-    console.log(query, token);
+  const searchClinics = async (query) => {
     const response = await axios.get(
       `${API_URL}/api/clinics/search?q=${query}`,
       {
         headers: {
-          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
       }

@@ -9,8 +9,6 @@ const MainHero = () => {
   const [loading, setLoading] = useState(false);
   const [noClinicFound, setNoClinicFound] = useState(false);
   const [selectedClinicId, setSelectedClinicId] = useState(null);
-  const [resizerPosition, setResizerPosition] = useState(50); // Initial position in percentage
-  const [isDragging, setIsDragging] = useState(false);
 
   const handleSearchChange = async (e) => {
     const query = e.target.value;
@@ -19,8 +17,7 @@ const MainHero = () => {
     if (query.length > 1) {
       try {
         setLoading(true);
-        const token = localStorage.getItem("token");
-        const response = await searchClinics(query, token);
+        const response = await searchClinics(query);
         if (response.length === 0) {
           setNoClinicFound(true);
         } else {
@@ -43,75 +40,14 @@ const MainHero = () => {
     setSelectedClinicId(suggestion._id); // Update selected clinic ID
   };
 
-  const handleMouseDown = () => {
-    setIsDragging(true);
-  };
-
-  const handleMouseMove = (e) => {
-    if (!isDragging) return;
-    const diffElement = document.querySelector(".diff");
-    const rect = diffElement.getBoundingClientRect();
-    const offsetX = e.clientX - rect.left;
-    const newPercentage = (offsetX / rect.width) * 100;
-    setResizerPosition(newPercentage);
-  };
-
-  const handleMouseUp = () => {
-    setIsDragging(false);
-  };
-
-  useEffect(() => {
-    if (isDragging) {
-      window.addEventListener("mousemove", handleMouseMove);
-      window.addEventListener("mouseup", handleMouseUp);
-    } else {
-      window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("mouseup", handleMouseUp);
-    }
-    return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("mouseup", handleMouseUp);
-    };
-  }, [isDragging]);
+ 
 
   return (
     <div className="hero min-h-screen bg-base-200 flex flex-col items-center">
-      {/* Comparison Section */}
-      <div className="diff aspect-[16/9] bg-gray-100 rounded-lg overflow-hidden shadow-lg">
-        {/* Side with ClinicAid */}
-        <div className="diff-item-1 relative w-full h-full">
-          <div className="absolute inset-0 flex flex-col items-center justify-center bg-green-500 text-white text-5xl font-semibold">
-            <div className="mb-4">ClinicAid Management</div>
-            <div className="text-lg">Effortless & Efficient</div>
-            <div className="text-sm mt-2">
-              Automated appointments, streamlined schedule
-            </div>
-          </div>
-        </div>
-        <div className="diff-item-2 relative w-full h-full">
-          {/* Content */}
-          <div className="absolute inset-0 flex flex-col items-center justify-center bg-red-500 text-white text-5xl font-semibold">
-            <div className="mb-4">Manual Management</div>
-            <div className="text-lg">Tedious & Inefficient</div>
-            <div className="text-sm mt-2">
-              Missed appointments, disorganized schedule
-            </div>
-          </div>
-        </div>
-
-        {/* Resizer */}
-        <div className="diff-resizer bg-gray-400"></div>
-      </div>
-      <div className="mb-7"></div>
-      <div className="mb-7"></div>
-      <div className="mb-7"></div>
-      <div className="mb-7"></div>
-      <div className="mb-7"></div>
-      <div className="mb-7"></div>
-      <div className="mb-7"></div>
+      
       {/* Existing Content */}
-      <div className="hero-content text-center">
-        <div className="">
+      <div className="hero-content text-center mt-20">
+        <div className="mt-20">
           <h1 className="text-4xl md:text-7xl font-bold">
             FIRST AID TO YOUR CLINIC
           </h1>

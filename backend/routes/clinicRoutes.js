@@ -124,7 +124,7 @@ router.get("/id/:clinicId", verifyToken, async (req, res) => {
   }
 });
 
-router.get("/search", verifyToken, async (req, res) => {
+router.get("/search", async (req, res) => {
   try {
     const searchQuery = req.query.q;
 
