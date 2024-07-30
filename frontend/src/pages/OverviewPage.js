@@ -2,8 +2,11 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import useClinicAPI from "../api/useClinicAPI";
 import usePatientAPI from "../api/usePatientAPI";
+import useAuthCheck from "../hooks/useAuthCheck.js";
 
 const OverviewPage = () => {
+  useAuthCheck();  // Check auth status when the component mounts
+
   const { clinicId } = useParams();
   const [name, setName] = useState("");
   const [gender, setGender] = useState("");
