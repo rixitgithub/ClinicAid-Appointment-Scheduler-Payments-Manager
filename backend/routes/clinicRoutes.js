@@ -139,4 +139,23 @@ router.get("/search", async (req, res) => {
   }
 });
 
+router.get("/", async (req, res) => {
+  try {
+    const clinics = await Clinic.find({})
+      .populate({
+        path: "employees",
+        model: "Employee",
+        select: "name email", 
+      })
+      .select("_id name address about phone createdAt"); 
+
+    res.status(200).json(clinics);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: error.response?.data?.message || "Internal server error" });
+  }
+});
+
+
 export default router;

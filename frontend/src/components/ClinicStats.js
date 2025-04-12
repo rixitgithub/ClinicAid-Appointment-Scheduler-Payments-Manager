@@ -42,7 +42,7 @@ const ClinicStats = () => {
 
   return (
     <div className="flex justify-center">
-      <div className="stats shadow">
+      <div className="stats shadow-lg">
         <div className="stat place-items-center">
           <div className="stat-title">Appointments</div>
           <div className="stat-value">{appointmentsToday}</div>

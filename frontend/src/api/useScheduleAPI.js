@@ -1,6 +1,7 @@
 import axios from "axios";
 
 const API_URL = "https://clinicaid-appointment-scheduler-payments.onrender.com";
+// const API_URL = "http://localhost:5000";
 
 const useScheduleAPI = () => {
   const createSchedule = async (scheduleData, token) => {

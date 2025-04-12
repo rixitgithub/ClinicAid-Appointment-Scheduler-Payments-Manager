@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-const API_URL = "http://localhost:3000";
+const API_URL = "http://localhost:5000";
 
 const useAuthCheck = () => {
   const navigate = useNavigate();
@@ -18,6 +18,7 @@ const useAuthCheck = () => {
         const response = await axios.get(`${API_URL}/api/users/checkLoginStatus`, {
           headers: { Authorization: `Bearer ${token}` },
         });
+        console.log(response.data)
         if (!response.data.isLoggedIn) {
           navigate('/login');
         }

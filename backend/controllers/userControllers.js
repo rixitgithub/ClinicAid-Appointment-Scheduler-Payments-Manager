@@ -20,6 +20,7 @@ export const createUser = async (req, res) => {
     email,
     password: hashedPassword,
   });
+  console.log("New User:", newUser);
   await newUser.save();
   res.json({ message: "User created successfully" });
 };

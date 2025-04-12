@@ -1,13 +1,14 @@
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-//const API_URL = "https://clinicaid-appointment-scheduler-payments.onrender.com";
-const API_URL = "http://localhost:3000";
+const API_URL = "https://clinicaid-appointment-scheduler-payments.onrender.com";
+// const API_URL = "http://localhost:5000";
 
 const useClinicAPI = () => {
   const navigate = useNavigate();
 
   const createClinic = (clinicData, token) => {
+    console.log(clinicData, token);
     return axios
       .post(`${API_URL}/api/clinics`, clinicData, {
         headers: {
@@ -89,7 +90,25 @@ const useClinicAPI = () => {
       });
   };
 
+  const getClinics = (token) => {
+    return axios
+      .get(`${API_URL}/api/clinics`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => response.data)
+      .catch((error) => {
+        throw new Error(
+          error.response?.data?.message || "Something went wrong"
+        );
+      });
+  };
+  
+
   return {
+    getClinics,
     createClinic,
     getClinic,
     ClinicDetailsById,

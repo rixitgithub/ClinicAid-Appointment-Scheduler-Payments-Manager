@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import useClinicAPI from "../api/useClinicAPI";
 import ClinicInfo from "./ClinicInfo.js";
 import ClinicEmployeeList from "./ClinicEmployeeList.js";
-import ClinicStats from "../components/ClinicStats.js"; // Import the ClinicStats component
+import ClinicStats from "../components/ClinicStats.js";
 import ClinicLogs from "../components/ClinicLogs.js";
 import { useNavigate } from "react-router-dom";
 
@@ -33,7 +33,6 @@ const ClinicDetailsPage = () => {
   }, [getClinic]);
 
   const handleShowDetails = () => {
-    // Implement the functionality to show details
     console.log("Show details button clicked");
   };
 

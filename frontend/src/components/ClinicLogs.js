@@ -6,20 +6,20 @@ const ClinicLogs = ({ clinic }) => {
   const { getLogsByClinicId } = useClinicAPI();
   const [logs, setLogs] = useState([]);
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [loading, setLoading] = useState(false);
   const containerRef = useRef(null);
 
   const fetchLogs = async (date) => {
+    setLoading(true);
     try {
       const token = localStorage.getItem("token");
       const formattedDate = date.toISOString().split("T")[0];
-      const logsData = await getLogsByClinicId(
-        clinic._id,
-        token,
-        formattedDate
-      );
+      const logsData = await getLogsByClinicId(clinic._id, token, formattedDate);
       setLogs(logsData);
     } catch (error) {
       console.error("Error fetching logs:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -43,11 +43,12 @@ const ClinicLogs = ({ clinic }) => {
     setCurrentDate(new Date(event.target.value));
   };
 
-  const handleScroll = () => {
+  const handleScroll = async () => {
     const { scrollTop, scrollHeight, clientHeight } = containerRef.current;
     if (scrollHeight - scrollTop === clientHeight) {
-      // At the bottom of the container, load more logs
+      // Load more logs when user reaches the bottom
       console.log("Reached bottom. Load more logs...");
+      // Implement pagination or fetching more logs if necessary
     }
   };
 
@@ -69,37 +70,29 @@ const ClinicLogs = ({ clinic }) => {
           <FaChevronRight size={20} />
         </button>
       </div>
+
       <div className="flex justify-center w-full">
         <div
           ref={containerRef}
-          className={`w-full ${
-            logs.length > 0 ? "overflow-y-scroll max-h-60" : ""
-          }`}
+          className={`w-full ${logs.length > 0 ? "overflow-y-scroll max-h-60" : ""}`}
           onScroll={handleScroll}
         >
-          {logs.length === 0 ? (
-            <div className="text-center text-gray-500 p-2">
-              No logs available.
-            </div>
+          {loading ? (
+            <div className="text-center p-2">Loading logs...</div>
+          ) : logs.length === 0 ? (
+            <div className="text-center text-gray-500 p-2">No logs available.</div>
           ) : (
             logs.map((log, index) => (
               <div key={index} className="chat chat-start">
-                <div
-                  className="chat-image avatar placeholder flex justify-center" // Center the avatar
-                >
+                <div className="chat-image avatar placeholder flex justify-center">
                   <div className="bg-neutral text-neutral-content rounded-full w-10">
                     <span className="text-3xl">{log.by[0]}</span>
                   </div>
                 </div>
                 <div className="chat-bubble">
-                  <p>
-                    {log.by} {log.what} {log.for}.
-                  </p>
+                  <p>{log.by} {log.what} {log.for}.</p>
                   <span className="text-xs text-white">
-                    {new Date(log.time).toLocaleTimeString([], {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
+                    {new Date(log.time).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                   </span>
                 </div>
               </div>

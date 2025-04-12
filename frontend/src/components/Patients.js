@@ -10,6 +10,8 @@ const Patients = ({ patients, doctors, clinicId }) => {
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const modalRef = useRef(null);
+  const [booking, setBooking] = useState(false);
+
 
   const { createSchedule } = useScheduleAPI();
   const { sendEmail } = useEmailAPI(); // Use the hook to handle email sending
@@ -35,6 +37,7 @@ const Patients = ({ patients, doctors, clinicId }) => {
 
   const handleBookingSubmit = async (e) => {
     e.preventDefault();
+    setBooking(true);
     const scheduleData = {
       date,
       startTime,
@@ -44,7 +47,7 @@ const Patients = ({ patients, doctors, clinicId }) => {
       clinicId,
     };
     const token = localStorage.getItem("token");
-    console.log(scheduleData);
+  
     try {
       const result = await createSchedule(scheduleData, token);
       if (result) {
@@ -53,11 +56,17 @@ const Patients = ({ patients, doctors, clinicId }) => {
           scheduleData,
         };
         await sendEmail(emailData, token);
+        closeModal(); // Close the modal
+      window.location.reload(); 
       }
     } catch (error) {
       console.error("Error creating schedule:", error);
+    } finally {
+      setBooking(false);
+      window.location.reload(); 
     }
   };
+  
 
   // Function to generate time options with 15-minute intervals
   const generateTimeOptions = () => {
@@ -209,10 +218,18 @@ const Patients = ({ patients, doctors, clinicId }) => {
                     </select>
                   </div>
                   <div className="mb-4">
-                    <button type="submit" className="btn btn-primary">
-                      Book {selectedPatient.name}'s Appointment
-                    </button>
-                  </div>
+  <button type="submit" className="btn btn-primary flex items-center justify-center gap-2">
+    {booking ? (
+      <>
+        <span className="loading loading-spinner"></span>
+        Booking...
+      </>
+    ) : (
+      <>Book {selectedPatient.name}'s Appointment</>
+    )}
+  </button>
+</div>
+
                 </div>
               </form>
             </div>

@@ -1,130 +1,27 @@
-import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import useUserAPI from "../api/userAPI.js"; // Import the checkLoginStatus function
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
+import React from 'react'
+import {assets} from '../assets/assets'
 
 const Header = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isOwner, setIsOwner] = useState(false);
-  const { checkLoginStatus, logout } = useUserAPI(); // Import the logout function
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    // Call the checkLoginStatus function when the component mounts
-    const fetchData = async () => {
-      const token = localStorage.getItem("token");
-      const response = await checkLoginStatus(token);
-      setIsOwner(response.isOwner);
-      setIsLoggedIn(response.isLoggedIn);
-    };
-
-    fetchData();
-  }, []);
-
-  // Function to handle logout
-  const handleLogout = async () => {
-    // Remove the token from local storage
-    localStorage.removeItem("token");
-
-    // Perform any additional logout logic here
-
-    setIsLoggedIn(false); // Update isLoggedIn state to false after logout
-    navigate("/");
-    window.location.reload(); // Refresh the page after logout
-  };
-
   return (
-    <header className="sticky top-0 z-50">
-      <nav>
-        <div className="navbar bg-base-100">
-          <div className="navbar-start">
-            <div className="dropdown">
-              <div
-                tabIndex={0}
-                role="button"
-                className="btn btn-ghost btn-circle"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M4 6h16M4 12h16M4 18h7"
-                  />
-                </svg>
-              </div>
-              <ul
-                tabIndex={0}
-                className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
-              >
-                <li>
-                  <Link to="/clinic">My Clinic</Link>
-                </li>
-                {isLoggedIn && !isOwner && (
-                  <>
-                    <li>
-                      <Link to="/profile">Portfolio</Link>
-                    </li>
-                    <li>
-                      <Link to="/appointments">Appointments</Link>
-                    </li>
-                  </>
-                )}
-              </ul>
-            </div>
-          </div>
-          <div className="navbar-center">
-            <Link to="/" className="btn btn-ghost text-xl">
-              ClinicAid
-            </Link>
-          </div>
-          <div className="navbar-end">
-            {/* Render logout link only if user is logged in */}
-            {isLoggedIn && (
-              <div className="mr-4">
-                {isLoggedIn && (
-                  <div className="mr-4">
-                    <Link
-                      onClick={handleLogout}
-                      className="btn btn-ghost btn-circle"
-                    >
-                      <FontAwesomeIcon icon={faSignOutAlt} />
-                    </Link>
-                  </div>
-                )}
-              </div>
-            )}
-            {/* Render nothing if user is logged in */}
-            {!isLoggedIn && (
-              <Link to="/register" className="btn btn-ghost btn-circle">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M5.121 17.804A5 5 0 0110 15h4a5 5 0 014.879 2.804M15 11a4 4 0 10-8 0 4 4 0 008 0z"
-                  />
-                </svg>
-              </Link>
-            )}
-          </div>
+    <div className='flex flex-col md:flex-row flex-wrap bg-green-400 rounded-lg px-4 md:px-10 lg:px-20'>
+      {/* ------Left Side------ */}
+      <div className='md:w-1/2 flex flex-col items-start justify-center gap-4 py-10 m-auto md:py-[10vw] md:mb-[-30px]'>
+        <p className='text-2xl md:text-3xl lg:text-4xl text-white font-semibold leading-tight md:leading-tight lg:leading-tight'>Find Your Doctor & make <br />an Appointment.</p>
+        <div className='flex flex-col md:flex-row items-center gap-3 text-white text-sm'>
+          <img className='w-28' src={assets.group_profiles} alt="" />
+          <p>Simply browse through our extensive list of trusted doctors,<br className='hidden sm:block' /> schedule your appointment hassle-free.</p>
         </div>
-      </nav>
-    </header>
-  );
-};
+        <a href="#speciality" className='flex items-center gap-2 bg-white px-8 py-3 rounded-full text-gray-600 text-sm m-auto md:m-0 hover:scale-105 transition-all duration-300'>
+          Book appointment <img className='w-3' src={assets.arrow_icon} alt="" />
+        </a>
+      </div>
 
-export default Header;
+      {/* ------Right Side------ */}
+      <div className='w-1/2 relative'>
+         <img className='w-full md:absolute bottom-0 h-auto rounded-lg' src={assets.header_img} alt="" />
+      </div > 
+    </div>
+  )
+}
+
+export default Header
