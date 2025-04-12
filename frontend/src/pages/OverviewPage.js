@@ -8,6 +8,9 @@ const OverviewPage = () => {
   useAuthCheck();
 
   const { clinicId } = useParams();
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+
   const [formData, setFormData] = useState({
     name: "",
     gender: "",
@@ -22,7 +25,6 @@ const OverviewPage = () => {
   const [clinicDetails, setClinicDetails] = useState(null);
   const { ClinicDetailsById } = useClinicAPI();
   const { createPatient } = usePatientAPI();
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchClinicDetails = async () => {
@@ -47,12 +49,16 @@ const OverviewPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     const token = localStorage.getItem("token");
+
     try {
       await createPatient({ ...formData, clinicId }, token);
       navigate("/");
     } catch (error) {
       console.error("Error creating patient:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -72,17 +78,24 @@ const OverviewPage = () => {
         {/* Clinic Info */}
         <div className="flex flex-col sm:flex-row gap-4 mb-8">
           <div className="flex-1 border border-gray-300 rounded-xl bg-white p-6 shadow">
-            <h1 className="text-3xl font-bold text-gray-800 mb-2">{clinicDetails.name}</h1>
+            <h1 className="text-3xl font-bold text-gray-800 mb-2">
+              {clinicDetails.name}
+            </h1>
             <p className="text-gray-600 mb-1">{clinicDetails.about}</p>
-            <p className="text-gray-600 mb-1"> {clinicDetails.address}</p>
+            <p className="text-gray-600 mb-1">{clinicDetails.address}</p>
             <p className="text-gray-600">+91-{clinicDetails.phone}</p>
           </div>
         </div>
 
         {/* Form */}
         <div className="bg-white border border-gray-200 p-6 rounded-xl shadow">
-          <h2 className="text-2xl font-semibold mb-4 text-center">Patient Information</h2>
-          <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <h2 className="text-2xl font-semibold mb-4 text-center">
+            Patient Information
+          </h2>
+          <form
+            onSubmit={handleSubmit}
+            className="grid grid-cols-1 sm:grid-cols-2 gap-4"
+          >
             <input
               id="name"
               type="text"
@@ -90,12 +103,14 @@ const OverviewPage = () => {
               onChange={handleChange}
               placeholder="Full Name"
               className="input input-bordered w-full"
+              required
             />
             <select
               id="gender"
               value={formData.gender}
               onChange={handleChange}
               className="select select-bordered w-full"
+              required
             >
               <option value="">Select Gender</option>
               <option value="male">Male</option>
@@ -116,7 +131,9 @@ const OverviewPage = () => {
               <option value="separated">Separated</option>
               <option value="divorced">Divorced</option>
               <option value="living_together">Living Together</option>
-              <option value="same_sex_relationship">Same Sex Relationship</option>
+              <option value="same_sex_relationship">
+                Same Sex Relationship
+              </option>
             </select>
             <input
               id="address"
@@ -139,6 +156,7 @@ const OverviewPage = () => {
               value={formData.doctorChoice}
               onChange={handleChange}
               className="select select-bordered w-full"
+              required
             >
               <option value="">Select Doctor</option>
               {doctorOptions}
@@ -157,13 +175,24 @@ const OverviewPage = () => {
               value={formData.appointmentDate}
               onChange={handleChange}
               className="input input-bordered w-full"
+              required
             />
+            <div className="sm:col-span-2 flex justify-center mt-4">
+              <button
+                type="submit"
+                className={`btn btn-primary w-40 flex justify-center items-center ${
+                  loading ? "cursor-not-allowed opacity-70" : ""
+                }`}
+                disabled={loading}
+              >
+                {loading ? (
+                  <span className="loading loading-spinner loading-sm"></span>
+                ) : (
+                  "Submit"
+                )}
+              </button>
+            </div>
           </form>
-          <div className="flex justify-center mt-6">
-            <button type="submit" onClick={handleSubmit} className="btn btn-primary w-40">
-              Submit
-            </button>
-          </div>
         </div>
       </div>
     </div>

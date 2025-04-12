@@ -6,6 +6,7 @@ const Schedule = ({ schedule, doctorId }) => {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
   const { updateEventStatus } = useScheduleAPI();
+  const [loadingEventId, setLoadingEventId] = useState(null);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -72,14 +73,17 @@ const Schedule = ({ schedule, doctorId }) => {
     setSelectedDate((prevDate) => addDays(prevDate, 1));
   };
 
-  const handleStatusChange = async (eventId, status) => {
-    try {
-      await updateEventStatus(eventId, status);
-      window.location.reload();
-    } catch (error) {
-      console.error(`Failed to update status for event ${eventId}:`, error);
-    }
-  };
+ const handleStatusChange = async (eventId, status) => {
+  try {
+    setLoadingEventId(eventId); // Start loading
+    await updateEventStatus(eventId, status);
+    window.location.reload(); // Or ideally, re-fetch events
+  } catch (error) {
+    console.error(`Failed to update status for event ${eventId}:`, error);
+  } finally {
+    setLoadingEventId(null); // End loading
+  }
+};
 
   return (
     <div className="relative h-full">
@@ -136,21 +140,30 @@ const Schedule = ({ schedule, doctorId }) => {
               {event.patientId.name} - {event.patientId.phoneNumber}
             </div>
             {event.status === "upcoming" && (
-              <div className="flex space-x-2">
-                <button
-                  onClick={() => handleStatusChange(event._id, "completed")}
-                  className="bg-green-600 hover:bg-green-700 text-white px-2 py-1 rounded"
-                >
-                  ✔
-                </button>
-                <button
-                  onClick={() => handleStatusChange(event._id, "missed")}
-                  className="bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded"
-                >
-                  ✘
-                </button>
-              </div>
-            )}
+  <div className="flex space-x-2">
+    {loadingEventId === event._id ? (
+      <div className="text-xs text-white animate-pulse px-2 py-1">Updating...</div>
+    ) : (
+      <>
+        <button
+          onClick={() => handleStatusChange(event._id, "completed")}
+          className="bg-green-600 hover:bg-green-700 text-white px-2 py-1 rounded disabled:opacity-50"
+          disabled={loadingEventId !== null}
+        >
+          ✔
+        </button>
+        <button
+          onClick={() => handleStatusChange(event._id, "missed")}
+          className="bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded disabled:opacity-50"
+          disabled={loadingEventId !== null}
+        >
+          ✘
+        </button>
+      </>
+    )}
+  </div>
+)}
+
           </div>
           <div className="text-sm">
             {event.startTime} - {event.endTime}

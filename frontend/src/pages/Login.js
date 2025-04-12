@@ -7,7 +7,8 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [error, setError] = useState('');
-  const [info, setInfo] = useState(''); // Success message
+  const [info, setInfo] = useState('');
+  const [loading, setLoading] = useState(false); // Loader
 
   const { login, register } = useUserAPI();
 
@@ -15,6 +16,7 @@ const Login = () => {
     event.preventDefault();
     setError('');
     setInfo('');
+    setLoading(true);
 
     try {
       if (state === 'Login') {
@@ -31,6 +33,8 @@ const Login = () => {
     } catch (err) {
       console.error('Error during auth:', err.message);
       setError(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -92,9 +96,18 @@ const Login = () => {
 
         <button
           type="submit"
-          className="bg-primary text-white text-base w-full py-2 rounded-md"
+          disabled={loading}
+          className={`text-white text-base w-full py-2 rounded-md ${
+            loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-primary'
+          }`}
         >
-          {state === 'Sign Up' ? 'Create Account' : 'Login'}
+          {loading
+            ? state === 'Login'
+              ? 'Signing in...'
+              : 'Creating account...'
+            : state === 'Sign Up'
+            ? 'Create Account'
+            : 'Login'}
         </button>
 
         {state === 'Sign Up' ? (
