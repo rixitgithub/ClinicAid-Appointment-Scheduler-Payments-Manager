@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const API_URL = "https://clinicaid-appointment-scheduler-payments.onrender.com";
+const API_URL = "https://clinic-aid.onrender.com";
 // const API_URL = "http://localhost:5000";
 
 const useClinicAPI = () => {
