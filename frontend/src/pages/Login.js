@@ -7,22 +7,27 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [error, setError] = useState('');
+  const [info, setInfo] = useState(''); // Success message
 
   const { login, register } = useUserAPI();
 
   const onSubmitHandler = async (event) => {
     event.preventDefault();
     setError('');
+    setInfo('');
 
     try {
       if (state === 'Login') {
         await login({ email, password });
+        window.location.reload(); // Refresh on successful login
       } else {
         await register({ email, password, name });
+        setState('Login'); // Switch to login after signup
+        setName('');
+        setPassword('');
+        setEmail('');
+        setInfo('Account created successfully. Please login.');
       }
-
-      // Reload to refresh user state or redirect
-      window.location.reload();
     } catch (err) {
       console.error('Error during auth:', err.message);
       setError(err.message);
@@ -39,9 +44,12 @@ const Login = () => {
           {state === 'Sign Up' ? 'Create Account' : 'Login'}
         </p>
         <p>
-          Please {state === 'Sign Up' ? 'sign up' : 'log in'} to book
-          appointment
+          Please {state === 'Sign Up' ? 'sign up' : 'log in'} to book appointment
         </p>
+
+        {info && (
+          <div className="text-sm text-green-600 w-full">{info}</div>
+        )}
 
         {state === 'Sign Up' && (
           <div className="w-full">
@@ -93,7 +101,11 @@ const Login = () => {
           <p>
             Already have an account?{' '}
             <span
-              onClick={() => setState('Login')}
+              onClick={() => {
+                setState('Login');
+                setError('');
+                setInfo('');
+              }}
               className="text-primary underline cursor-pointer"
             >
               Login here
@@ -103,7 +115,11 @@ const Login = () => {
           <p>
             Create a new account?{' '}
             <span
-              onClick={() => setState('Sign Up')}
+              onClick={() => {
+                setState('Sign Up');
+                setError('');
+                setInfo('');
+              }}
               className="text-primary underline cursor-pointer"
             >
               Click here

@@ -17,7 +17,7 @@ const useClinicAPI = () => {
         },
       })
       .then((response) => {
-        navigate("/dashboard");
+        navigate("/clinic");
         return response.data;
       })
       .catch((error) => {
