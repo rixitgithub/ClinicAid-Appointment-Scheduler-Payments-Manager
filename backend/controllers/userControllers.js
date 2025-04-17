@@ -1,12 +1,13 @@
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
-import User from "../models/User.js"; // Adjust the path as needed
-import Clinic from "../models/Clinic.js"; // Adjust the path as needed
+import User from "../models/User.js";
+import Clinic from "../models/Clinic.js";
 
 import dotenv from "dotenv";
 dotenv.config();
 
 const SECRET = process.env.JWT_SECRET;
+
 export const createUser = async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
@@ -20,6 +21,7 @@ export const createUser = async (req, res) => {
     email,
     password: hashedPassword,
   });
+
   console.log("New User:", newUser);
   await newUser.save();
   res.json({ message: "User created successfully" });
@@ -42,6 +44,7 @@ export const loginUser = async (req, res) => {
   const token = jwt.sign({ id: user._id, email: user.email }, SECRET, {
     expiresIn: "1h",
   });
+
   res.json({ message: "Login successful", token });
 };
 
@@ -51,19 +54,22 @@ export const checkLoginStatus = async (req, res) => {
     if (!token) {
       return res.status(401).json({ message: "Token not provided" });
     }
+
     jwt.verify(token, SECRET, async (err, decoded) => {
       if (err) {
         return res.status(401).json({ message: "Invalid token" });
       }
+
       const userId = decoded.id;
       const user = await User.findById(userId);
+
       if (!user) {
         return res.status(401).json({ message: "User not found" });
       }
-      // Check if the user is the owner of any clinic
+
       const clinics = await Clinic.find({ createdBy: userId });
       const isOwner = clinics.length > 0;
-      // If the token is valid and user exists, send back the login status along with the owner status
+
       res.json({ isLoggedIn: true, isOwner });
     });
   } catch (error) {

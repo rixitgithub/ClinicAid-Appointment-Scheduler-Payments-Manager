@@ -105,7 +105,6 @@ const useClinicAPI = () => {
         );
       });
   };
-  
 
   return {
     getClinics,

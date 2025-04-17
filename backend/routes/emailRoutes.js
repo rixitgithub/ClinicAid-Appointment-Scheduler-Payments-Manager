@@ -4,7 +4,6 @@ import Employee from "../models/Employee.js";
 import Patient from "../models/Patient.js";
 import Clinic from "../models/Clinic.js";
 import { verifyToken } from "../middleware/auth.js";
-import User from "../models/User.js";
 
 const router = express.Router();
 
@@ -12,29 +11,23 @@ router.post("/confirm", verifyToken, async (req, res) => {
   const { to, scheduleData } = req.body;
 
   try {
-    // Find the patient details based on the provided ID
     const patient = await Patient.findById(to).populate("userId");
 
     if (!patient) {
       return res.status(404).json({ error: "Patient not found" });
     }
 
-    // Extract email from the associated user
     const userEmail = patient.userId.email;
-
-    // Fetch clinic details
     const clinic = await Clinic.findById(scheduleData.clinicId);
     if (!clinic) {
       return res.status(404).json({ error: "Clinic not found" });
     }
 
-    // Fetch doctor details
     const doctor = await Employee.findById(scheduleData.doctorId);
     if (!doctor) {
       return res.status(404).json({ error: "Doctor not found" });
     }
 
-    // HTML content for the email
     const htmlContent = `
     <!DOCTYPE html>
 <html lang="en">
@@ -146,27 +139,23 @@ router.post("/confirm", verifyToken, async (req, res) => {
     </div>
 </body>
 </html>
-
     `;
 
-    // Create a transporter object using the default SMTP transport
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: process.env.EMAIL_USER, // Your Gmail email address
-        pass: process.env.EMAIL_PASS, // Your Gmail password or App password
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
       },
     });
 
-    // Setup email data with HTML content
     const mailOptions = {
-      from: process.env.EMAIL_USER, // Sender address
-      to: userEmail, // Patient's email
-      subject: "Appointment Confirmation", // Subject line
-      html: htmlContent, // HTML body
+      from: process.env.EMAIL_USER,
+      to: userEmail,
+      subject: "Appointment Confirmation",
+      html: htmlContent,
     };
 
-    // Send mail with defined transport object
     await transporter.sendMail(mailOptions);
     console.log("Email sent successfully");
     res.status(200).json({ message: "Email sent successfully" });

@@ -6,54 +6,43 @@ import Clinic from "../models/Clinic.js";
 import Employee from "../models/Employee.js";
 import { verifyToken } from "../middleware/auth.js";
 
-// Define the function to send reminder emails for appointments scheduled on the same day
 async function sendReminders() {
   try {
-    // Get the current date
     const currentDate = new Date();
-    // Set the time to midnight (00:00:00)
     currentDate.setHours(0, 0, 0, 0);
     console.log("Current Date:", currentDate);
 
-    // Find schedules for the current day
     const schedules = await Schedule.find({
       date: {
-        $gte: currentDate, // Find schedules on or after the current date
-        $lt: new Date(currentDate.getTime() + 24 * 60 * 60 * 1000), // Find schedules before the next day
+        $gte: currentDate,
+        $lt: new Date(currentDate.getTime() + 24 * 60 * 60 * 1000),
       },
-      status: "upcoming", // Only send reminders for upcoming appointments
+      status: "upcoming",
     }).populate("patientId doctorId clinicId");
 
     console.log("Schedules for today:", schedules);
 
-    // Iterate through each schedule and send reminder emails
     for (const schedule of schedules) {
-      const { patientId, doctorId, clinicId, date, startTime, endTime } =
-        schedule;
+      const { patientId, doctorId, clinicId, date, startTime, endTime } = schedule;
 
-      // Fetch patient details
       const patient = await Patient.findById(patientId).populate("userId");
       if (!patient) continue;
 
       console.log("Patient:", patient);
 
-      // Fetch doctor details
       const doctor = await Employee.findById(doctorId);
       if (!doctor) continue;
 
       console.log("Doctor:", doctor);
 
-      // Fetch clinic details
       const clinic = await Clinic.findById(clinicId);
       if (!clinic) continue;
 
       console.log("Clinic:", clinic);
 
-      // Extract email from the associated user
       const userEmail = patient.userId.email;
       console.log("User Email:", userEmail);
 
-      // HTML content for the reminder email
       const htmlContent = `
       <!DOCTYPE html>
       <html lang="en">
@@ -150,12 +139,8 @@ async function sendReminders() {
                   <h1>Hello, ${patient.name}</h1>
                   <p>This is a reminder for your upcoming appointment with Clinic Aid. Please see the details below:</p>
                   <div class="details">
-                      <p><strong>Appointment Date:</strong> ${new Date(
-                        schedule.date
-                      ).toDateString()}</p>
-                      <p><strong>Time:</strong> ${schedule.startTime} - ${
-        schedule.endTime
-      }</p>
+                      <p><strong>Appointment Date:</strong> ${new Date(schedule.date).toDateString()}</p>
+                      <p><strong>Time:</strong> ${schedule.startTime} - ${schedule.endTime}</p>
                       <p><strong>Doctor:</strong> Dr. ${doctor.name}</p>
                       <p><strong>Clinic Location:</strong> ${clinic.address}</p>
                   </div>
@@ -169,38 +154,31 @@ async function sendReminders() {
           </div>
       </body>
       </html>
-      
-        `;
+      `;
 
-      // Create a transporter object using the default SMTP transport
       const transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
-          user: process.env.EMAIL_USER, // Your Gmail email address
-          pass: process.env.EMAIL_PASS, // Your Gmail password or App password
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASS,
         },
       });
 
-      // Setup email data with HTML content
       const mailOptions = {
-        from: process.env.EMAIL_USER, // Sender address
-        to: userEmail, // Patient's email
-        subject: "Appointment Reminder", // Subject line
-        html: htmlContent, // HTML body
+        from: process.env.EMAIL_USER,
+        to: userEmail,
+        subject: "Appointment Reminder",
+        html: htmlContent,
       };
 
-      // Send mail with defined transport object
       await transporter.sendMail(mailOptions);
       console.log("Reminder email sent successfully for appointment on", date);
     }
 
-    // Return a success message
     console.log("Reminder emails sent successfully");
   } catch (error) {
-    // Log and handle errors
     console.error("Error sending reminder emails:", error);
   }
 }
 
-// Export the sendReminders function
 export default sendReminders;

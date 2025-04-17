@@ -26,7 +26,9 @@ const ProfilePage = () => {
     setEmployeeEmail(editedEmployee.email);
     setEmployeePassword(editedEmployee.password);
     setSpecialization(
-      editedEmployee.type === "Doctor" ? editedEmployee.Specialization || "" : ""
+      editedEmployee.type === "Doctor"
+        ? editedEmployee.Specialization || ""
+        : ""
     );
     setEditIndex(index);
   };
@@ -88,10 +90,14 @@ const ProfilePage = () => {
   return (
     <div className="p-6 ">
       <div className="bg-blue-100 border border-gray-300 p-6 rounded-lg max-w-3xl mx-auto">
-        <h1 className="text-2xl font-bold mb-4 text-gray-800">Clinic Profile</h1>
+        <h1 className="text-2xl font-bold mb-4 text-gray-800">
+          Clinic Profile
+        </h1>
 
         <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">Clinic Name</label>
+          <label className="block text-sm font-medium text-gray-700">
+            Clinic Name
+          </label>
           <input
             type="text"
             className="mt-1 block w-full p-2 border rounded-lg border-gray-300 focus:outline-none"
@@ -101,7 +107,9 @@ const ProfilePage = () => {
         </div>
 
         <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">About Clinic</label>
+          <label className="block text-sm font-medium text-gray-700">
+            About Clinic
+          </label>
           <textarea
             rows="3"
             className="mt-1 block w-full p-2 border rounded-lg border-gray-300 focus:outline-none"
@@ -111,7 +119,9 @@ const ProfilePage = () => {
         </div>
 
         <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">Address</label>
+          <label className="block text-sm font-medium text-gray-700">
+            Address
+          </label>
           <input
             type="text"
             className="mt-1 block w-full p-2 border rounded-lg border-gray-300 focus:outline-none"
@@ -121,7 +131,9 @@ const ProfilePage = () => {
         </div>
 
         <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">Phone Number</label>
+          <label className="block text-sm font-medium text-gray-700">
+            Phone Number
+          </label>
           <input
             type="text"
             className="mt-1 block w-full p-2 border rounded-lg border-gray-300 focus:outline-none"
@@ -132,7 +144,9 @@ const ProfilePage = () => {
 
         {/* Employees Section */}
         <div className="mt-6">
-          <h2 className="text-xl font-semibold text-gray-800 mb-2">Add Employees</h2>
+          <h2 className="text-xl font-semibold text-gray-800 mb-2">
+            Add Employees
+          </h2>
 
           <div className="grid sm:grid-cols-2 gap-4">
             <select
@@ -202,10 +216,16 @@ const ProfilePage = () => {
                 className="flex justify-between items-center border p-3 rounded-md mt-2 bg-white"
               >
                 <div>
-                  <p className="text-gray-800 font-medium">{emp.name} ({emp.type})</p>
-                  <p className="text-gray-500 text-sm">{emp.phone} | {emp.email}</p>
+                  <p className="text-gray-800 font-medium">
+                    {emp.name} ({emp.type})
+                  </p>
+                  <p className="text-gray-500 text-sm">
+                    {emp.phone} | {emp.email}
+                  </p>
                   {emp.Specialization && (
-                    <p className="text-gray-500 text-sm">Specialization: {emp.Specialization}</p>
+                    <p className="text-gray-500 text-sm">
+                      Specialization: {emp.Specialization}
+                    </p>
                   )}
                 </div>
                 <div className="flex gap-2">

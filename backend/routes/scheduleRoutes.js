@@ -7,12 +7,9 @@ import { verifyToken } from "../middleware/auth.js";
 
 const router = express.Router();
 
-// Create a new schedule
 router.post("/create", verifyToken, async (req, res) => {
   try {
     const patientId = req.body.patientId;
-
-    // Fetch the patient information
     const patient = await Patient.findById(patientId);
 
     if (!patient) {
@@ -38,6 +35,7 @@ router.post("/create", verifyToken, async (req, res) => {
         .status(500)
         .json({ message: "Error saving log entry", error: logError });
     }
+
     const newSchedule = new Schedule(req.body);
     await newSchedule.save();
     res.status(201).json(newSchedule);
@@ -49,14 +47,11 @@ router.post("/create", verifyToken, async (req, res) => {
 
 router.post("/update-status", async (req, res) => {
   try {
-    console.log("hiiiiiiiiiiiiiiiiiiiiiiiiii");
-    console.log("body ------------------", req.body);
     const { eventId, status } = req.body;
 
-    // Find the schedule by eventId and populate doctor and patient details
     const schedule = await Schedule.findById(eventId)
-      .populate("doctorId", "name") // Assuming Employee schema has a 'name' field
-      .populate("patientId", "name"); // Assuming Patient schema has a 'name' field
+      .populate("doctorId", "name")
+      .populate("patientId", "name");
 
     if (!schedule) {
       return res
@@ -64,15 +59,12 @@ router.post("/update-status", async (req, res) => {
         .json({ message: `Schedule with ID ${eventId} not found` });
     }
 
-    // Update the status of the schedule
     schedule.status = status;
     await schedule.save();
 
-    // Extract doctor name and patient name from the populated fields
     const doctorName = schedule.doctorId.name;
     const patientName = schedule.patientId.name;
 
-    // Determine the log message based on the status
     let logMessage = "";
     if (status === "completed") {
       logMessage = `completed their appointment with `;
@@ -82,15 +74,15 @@ router.post("/update-status", async (req, res) => {
       logMessage = `Updated status to ${status}`;
     }
 
-    // Create a new log entry
     const newLog = new Logs({
       time: new Date(),
       by: doctorName,
       what: logMessage,
       for: patientName,
-      date: schedule.date.toISOString().split("T")[0], // Format the date as YYYY-MM-DD
+      date: schedule.date.toISOString().split("T")[0],
       clinicId: schedule.clinicId,
     });
+
     await newLog.save();
 
     res
@@ -104,7 +96,6 @@ router.post("/update-status", async (req, res) => {
   }
 });
 
-// Find schedules for a patient
 router.get("/find", verifyToken, async (req, res) => {
   try {
     const userId = req.user.id;
@@ -118,7 +109,6 @@ router.get("/find", verifyToken, async (req, res) => {
 
     const patientIds = patients.map((patient) => patient._id);
 
-    // Fetch schedules and populate doctor, clinic, and patient data
     const schedules = await Schedule.find({ patientId: { $in: patientIds } })
       .populate("doctorId", "name phone email specialization")
       .populate("clinicId", "name address")
@@ -129,6 +119,7 @@ router.get("/find", verifyToken, async (req, res) => {
         .status(404)
         .json({ message: `No schedules found for user ID ${userId}` });
     }
+
     res.status(200).json(schedules);
   } catch (error) {
     console.error(
@@ -142,20 +133,15 @@ router.get("/find", verifyToken, async (req, res) => {
   }
 });
 
-// Find today's appointments excluding missed ones
 router.get("/find/today", async (req, res) => {
   try {
     const today = new Date();
-
-    // Set start of the day to 00:00:00
     const startOfDay = new Date(today.setHours(0, 0, 0, 0));
-
-    // Set end of the day to 23:59:59
     const endOfDay = new Date(today.setHours(23, 59, 59, 999));
 
     const appointments = await Schedule.find({
       date: { $gte: startOfDay, $lt: endOfDay },
-      status: { $ne: "missed" }, // Exclude missed appointments
+      status: { $ne: "missed" },
     });
 
     res.status(200).json(appointments);
@@ -167,7 +153,6 @@ router.get("/find/today", async (req, res) => {
 
 router.get("/all", verifyToken, async (req, res) => {
   try {
-    // Step 1: Find the clinics created by the user
     const clinics = await Clinic.find({ createdBy: req.user.id }).select("_id");
 
     if (!clinics.length) {
@@ -178,7 +163,6 @@ router.get("/all", verifyToken, async (req, res) => {
 
     const clinicIds = clinics.map((clinic) => clinic._id);
 
-    // Step 2 & 3: Find schedules with these clinic IDs, exclude "missed" status, and count distinct patient IDs
     const totalPatients = await Schedule.aggregate([
       { $match: { clinicId: { $in: clinicIds }, status: { $ne: "missed" } } },
       { $group: { _id: "$patientId" } },
@@ -194,10 +178,8 @@ router.get("/all", verifyToken, async (req, res) => {
   }
 });
 
-// Get number of patients registered this month
 router.get("/this-month", verifyToken, async (req, res) => {
   try {
-    // Step 1: Find the clinics created by the user
     const clinics = await Clinic.find({ createdBy: req.user.id }).select("_id");
 
     if (!clinics.length) {
@@ -208,14 +190,13 @@ router.get("/this-month", verifyToken, async (req, res) => {
 
     const clinicIds = clinics.map((clinic) => clinic._id);
 
-    // Step 2 & 3: Find schedules with these clinic IDs, exclude "missed" status, and count distinct patient IDs
     const today = new Date();
     const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
     const lastDayOfMonth = new Date(
       today.getFullYear(),
       today.getMonth() + 1,
       0
-    ); // Setting last day of month correctly
+    );
 
     const totalPatients = await Schedule.aggregate([
       {

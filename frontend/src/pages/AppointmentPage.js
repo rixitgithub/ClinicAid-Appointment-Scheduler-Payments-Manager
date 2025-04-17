@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { format } from "date-fns";
 import useScheduleAPI from "../api/useScheduleAPI";
-import { FaClock, FaUserMd, FaCalendarCheck, FaTimes } from "react-icons/fa";
 
 const AppointmentPage = () => {
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [filter, setFilter] = useState("all"); // State variable for filter
+  const [filter, setFilter] = useState("all");
   const patientId = localStorage.getItem("token");
   const { fetchAppointmentsByPatient } = useScheduleAPI();
 
@@ -38,7 +37,6 @@ const AppointmentPage = () => {
     );
   }
 
-  // Calculate counts for all, upcoming, completed, and missed appointments
   const allCount = appointments.length;
   const upcomingCount = appointments.filter(
     (appointment) => appointment.status === "upcoming"
@@ -50,7 +48,6 @@ const AppointmentPage = () => {
     (appointment) => appointment.status === "missed"
   ).length;
 
-  // Filter appointments based on the selected filter
   let filteredAppointments = [];
 
   if (filter === "all") {
@@ -61,7 +58,7 @@ const AppointmentPage = () => {
     );
   }
   const activeFilterStyle = {
-    borderBottom: "2px solid #3182ce", // Color of btn-primary
+    borderBottom: "2px solid #3182ce",
   };
 
   return (
@@ -71,7 +68,6 @@ const AppointmentPage = () => {
           Your Appointments
         </h2>
         <div className="text-center mb-4">
-          {/* Filter buttons with counts */}
           <button
             className={`mr-4 ${filter === "all" ? "active" : ""}`}
             style={filter === "all" ? activeFilterStyle : null}

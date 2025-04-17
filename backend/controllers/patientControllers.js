@@ -11,13 +11,11 @@ export const createPatient = async (req, res) => {
       return res.status(404).json({ message: "Doctor not found" });
     }
 
-    // Check if the appointmentDate is valid
     const appointmentDate = new Date(body.appointmentDate);
     if (isNaN(appointmentDate.getTime())) {
       return res.status(400).json({ message: "Invalid appointment date" });
     }
 
-    // Format the appointment date to a readable format
     function formatDate(date) {
       const options = {
         year: "numeric",
@@ -69,7 +67,6 @@ export const createPatient = async (req, res) => {
   }
 };
 
-// Get all patients
 export const getPatients = async (req, res) => {
   try {
     const patients = await Patient.find();
@@ -79,7 +76,6 @@ export const getPatients = async (req, res) => {
   }
 };
 
-// Get a patient by ID
 export const getPatientById = async (req, res) => {
   try {
     const patient = await Patient.findById(req.params.id);
@@ -92,7 +88,6 @@ export const getPatientById = async (req, res) => {
   }
 };
 
-// Update a patient
 export const updatePatient = async (req, res) => {
   try {
     const updatedPatient = await Patient.findByIdAndUpdate(
@@ -109,7 +104,6 @@ export const updatePatient = async (req, res) => {
   }
 };
 
-// Delete a patient
 export const deletePatient = async (req, res) => {
   try {
     const deletedPatient = await Patient.findByIdAndDelete(req.params.id);

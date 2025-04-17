@@ -75,7 +75,6 @@ const OverviewPage = () => {
   return (
     <div className="p-4 sm:p-8 bg-blue-50 min-h-screen">
       <div className="max-w-5xl mx-auto">
-        {/* Clinic Info */}
         <div className="flex flex-col sm:flex-row gap-4 mb-8">
           <div className="flex-1 border border-gray-300 rounded-xl bg-white p-6 shadow">
             <h1 className="text-3xl font-bold text-gray-800 mb-2">
@@ -87,7 +86,6 @@ const OverviewPage = () => {
           </div>
         </div>
 
-        {/* Form */}
         <div className="bg-white border border-gray-200 p-6 rounded-xl shadow">
           <h2 className="text-2xl font-semibold mb-4 text-center">
             Patient Information

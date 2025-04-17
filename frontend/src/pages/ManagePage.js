@@ -7,21 +7,20 @@ import Schedule from "../components/Schedule";
 import useClinicAPI from "../api/useClinicAPI";
 
 const ManagePage = () => {
-  const { clinicId } = useParams(); // Get the clinic ID from the URL
-  const { search } = useLocation(); // Get the query parameters from the URL
-  const navigate = useNavigate(); // Initialize useNavigate
-  const doctorId = new URLSearchParams(search).get("doctorId"); // Get the doctor ID from the query parameters
+  const { clinicId } = useParams();
+  const { search } = useLocation();
+  const navigate = useNavigate();
+  const doctorId = new URLSearchParams(search).get("doctorId");
   const [clinicDetails, setClinicDetails] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const { ClinicDetailsById } = useClinicAPI();
 
   useEffect(() => {
-    // Function to fetch clinic details from the backend
     const fetchClinicDetails = async () => {
       try {
         const token = localStorage.getItem("token");
         if (!token) {
-          navigate("/login"); // Redirect to login if token is not present
+          navigate("/login");
           return;
         }
         const response = await ClinicDetailsById(clinicId, token);
@@ -34,7 +33,7 @@ const ManagePage = () => {
       } catch (error) {
         console.error("Error fetching clinic details:", error);
         if (error.response && error.response.status === 401) {
-          navigate("/login"); // Redirect to login on 401 error
+          navigate("/login");
         } else {
           setIsLoading(false);
         }
@@ -65,7 +64,6 @@ const ManagePage = () => {
 
   return (
     <div className="flex flex-col sm:flex-row h-screen">
-      {/* Left Section */}
       <div className="flex-[3] h-full bg-gray-200 flex flex-col overflow-auto">
         <Doctors doctors={clinicDetails.employees} />
         <Patients
@@ -76,7 +74,6 @@ const ManagePage = () => {
           )}
         />
       </div>
-      {/* Right Section - Schedule */}
       <div className="flex-[7] h-full bg-white p-4 overflow-auto relative">
         <h2 className="text-2xl font-bold mb-4">Schedule</h2>
         {doctorId && clinicDetails.schedules && (
